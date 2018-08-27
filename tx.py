@@ -69,17 +69,18 @@ while True:
         asc_CSEQ =   chr(CSEQ)
         RESP = asc_NAK
 
-        # Wait receiver send FIRST ACK
+        # Wait receiver send FIRST NAK
         if cont == 1:
             os.system('cls||clear')
-            print "Waiting First ACK...\n"
+            print "blocks to send: " + str(len(DATAFULL))
+            print "Waiting First NAK...\n"
             FIRST = ser.read(1)
             time.sleep(1)
             os.system('cls||clear')
         else:
             FIRST = asc_ACK
 
-        while (RESP == asc_NAK or FIRST == asc_ACK):
+        while (RESP == asc_NAK or FIRST == asc_NAK):
             # ---- #
             # Send SOH
             ser.write(chr(SOH))   
