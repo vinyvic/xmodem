@@ -32,6 +32,7 @@ def splitString(string):
 def getFileText(filename):
 	with open(filename, 'r') as file:
 		text = file.read()
+        text = text.replace('\n', chr(0x1a))
 	return splitString(text)
 
 # Menu of TX
@@ -60,6 +61,7 @@ while True:
     # Open file
     DATAFULL = getFileText('a.txt')
     for DATA in DATAFULL:
+        DATA = DATA.replace(chr(0x1a), '\n')
         SEQ = cont          #SEQ -> one byte sequence number which starts at 1, and increments by one until it reaches 255 and then wraps around to zero.
         CSEQ = 255 - SEQ    #-SEQ
         asc_SEQ  =   chr(SEQ)
