@@ -42,6 +42,7 @@ filename = str(raw_input('Enter with name of file and extension: '))
 def savefiile():
     with open(filename, 'a') as file:
         file.write(full_data)
+        print "Save in file name " + filename
 
 ser.write(asc_NAK)
 
