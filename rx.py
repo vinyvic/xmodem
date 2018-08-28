@@ -37,11 +37,14 @@ def calc_FCS(data):
     FCS = s % 256
     return chr(FCS)
 
+filename = str(raw_input('Enter with name of file and extension: '))
+
 def savefiile():
-    print '\nFULL DATA:\n'
-    print full_data
+    with open(filename, 'a') as file:
+        file.write(full_data)
 
 ser.write(asc_NAK)
+
 while rec_SOH != EOT:
     rec_SOH = ser.read(1)
     if rec_SOH == asc_SOH:
