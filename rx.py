@@ -4,8 +4,8 @@ import serial
 import time
 
 # Config Port FOR /dev/pts/
-port = 1
-ser = serial.Serial('/dev/pts/' + str(port))
+port = 2
+ser = serial.Serial('/dev/pts/' + str(port), timeout=5)
 
 # DEFAULTS INTS VALUES
 SOH = 0x01     #SOH -> Start of header character (decimal 1).
@@ -37,27 +37,42 @@ def calc_FCS(data):
     FCS = s % 256
     return chr(FCS)
 
+os.system("cls||clear")
 filename = str(raw_input('Enter with name of file and extension: '))
 
 def savefiile():
     with open(filename, 'a') as file:
         file.write(full_data)
+        print "File " + filename + " saved with sucess!"
 
-ser.write(asc_NAK)
+first = 1
+sair = 1
+os.system('cls||clear')
+print "Aguardando Arquivo"
 
-while rec_SOH != EOT:
+while first == 1 and sair == 1:
+    ser.write(asc_NAK)
     rec_SOH = ser.read(1)
     if rec_SOH == asc_SOH:
-        print 'SOH Header Recied'
+        sair = 0
     elif rec_SOH == asc_EOT:
-        print 'EOT'
+        print '\nEOT'
+        exit()
+
+while rec_SOH != EOT:
+    if first != 1:
+        rec_SOH = ser.read(1)
+    else:
+        first = 0
+    if rec_SOH == asc_EOT:
+        print '\nEOT'
         ser.write(asc_ACK)
         savefiile()
         exit()
-    else:
+    elif rec_SOH != asc_SOH:
         print 'SOH Header Error'
         error = 1
-
+    first = 0
     rec_SEQ = ser.read(1)
 
     if rec_SEQ in SEQS:
@@ -70,8 +85,6 @@ while rec_SOH != EOT:
         error = 3
 
     rec_data = ser.read(128)
-    print rec_data
-
     rec_FCS = ser.read(1)
     asc_FCS = calc_FCS(rec_data)
 
@@ -81,7 +94,7 @@ while rec_SOH != EOT:
     if error == 0:
         full_data = full_data + rec_data
         ser.write(asc_ACK)
-        print 'Package ' + str(ord(rec_SEQ)) + ' recevied\n'
+        print 'Package ' + str(ord(rec_SEQ)) + ' recevied'
         SEQS.append(rec_SEQ)
     else:
         ser.write(asc_NAK)

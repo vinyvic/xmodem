@@ -26,7 +26,7 @@ SUB = '.'
 
 ## Functions ##
 
-# Slipt string in peaces of 128 bits
+# Split string in peaces of 128 bits
 def splitString(string):
     return [string[i:i+128] for i in range(0, len(string), 128)]
     
